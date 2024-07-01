@@ -570,8 +570,8 @@ class Tree_Alignment:
         # If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
         # however it causes inside pandas and to recover this wanrnig, we need to rewrite all the code above
         # and it still get the result we need. we will get this right soon.
-        np.warnings.filterwarnings(
-            'ignore', category=np.VisibleDeprecationWarning)
+        # np.warnings.filterwarnings(
+        #     'ignore', category=np.VisibleDeprecationWarning)
 
         COST = cost
 

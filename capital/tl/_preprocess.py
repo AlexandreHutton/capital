@@ -57,6 +57,7 @@ class Preprocessing:
         N_pcs=50,
         n_Top_genes=2000,
         K=10,
+        exclude_highly_expressed=False,
         magic_imputation=False,
         copy=False
     ):
@@ -64,7 +65,7 @@ class Preprocessing:
         # adata = adata.copy() if copy else adata
         sc.pp.filter_cells(adata, min_genes=Min_Genes)
         sc.pp.filter_genes(adata, min_cells=Min_Cells)
-        sc.pp.normalize_total(adata, exclude_highly_expressed=True)
+        sc.pp.normalize_total(adata, exclude_highly_expressed=exclude_highly_expressed)
         sc.pp.log1p(adata)
 
         if magic_imputation is True:
@@ -199,7 +200,7 @@ class Preprocessing:
                 adata.uns['paga']["connectivities_tree"].todense()
             )
 
-            G = nx.from_numpy_matrix(Adjacency_matrix, create_using=nx.Graph())
+            G = nx.from_numpy_array(Adjacency_matrix, create_using=nx.Graph())
 
             # get names of cluster from adata.uns['paga']['groups'] as string
             groups_key = adata.uns['paga']['groups']
@@ -216,7 +217,7 @@ class Preprocessing:
             sigma = np.sort(Y, axis=1)[:, ka]
             affinity_matrix = np.exp(np.square(Y/sigma) * -1)
             matrix = 1 - affinity_matrix
-            G = nx.from_numpy_matrix(matrix, create_using=nx.Graph())
+            G = nx.from_numpy_array(matrix, create_using=nx.Graph())
             G = nx.relabel_nodes(
                 G, dict(zip(G, adata.obs[groupby].cat.categories)))
 
@@ -224,7 +225,7 @@ class Preprocessing:
             from scipy.spatial.distance import pdist, squareform
             y = pdist(cluster_centroid_data, 'euclid')
             Y = squareform(y)
-            G = nx.from_numpy_matrix(Y, create_using=nx.Graph())
+            G = nx.from_numpy_array(Y, create_using=nx.Graph())
             G = nx.relabel_nodes(
                 G, dict(zip(G, adata.obs[groupby].cat.categories)))
 

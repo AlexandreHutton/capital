@@ -122,9 +122,9 @@ def dtw(
         y2 = data2[ordered_cells2, :].obs[col_pseudotime_tmp]
 
         clusters1 = data1[ordered_cells1, :].obs[groupby1]
-        colors1 = data1[ordered_cells1, :].uns[groupby_colors1]
+        colors1 = data1.uns[groupby_colors1]
         clusters2 = data2[ordered_cells2, :].obs[groupby2]
-        colors2 = data2[ordered_cells2, :].uns[groupby_colors2]
+        colors2 = data2.uns[groupby_colors2]
 
         if not type(colors1) == np.ndarray:
             colors1 = np.array([colors1])
@@ -132,10 +132,14 @@ def dtw(
         if not type(colors2) == np.ndarray:
             colors2 = np.array([colors2])
 
-        dic1 = dict(
-            zip(data1[ordered_cells1, :].obs[groupby1].cat.categories, colors1))
-        dic2 = dict(
-            zip(data2[ordered_cells2, :].obs[groupby2].cat.categories, colors2))
+        dic1 = dict()
+        dic2 = dict()
+        print(colors1)
+        print(colors2)
+        for idx, c in enumerate(data1[ordered_cells1, :].obs[groupby1].cat.categories):
+            dic1[c] = colors1[0][idx]
+        for idx, c in enumerate(data2[ordered_cells2, :].obs[groupby2].cat.categories):
+            dic2[c] = colors2[0][idx]
 
         colorlist1 = clusters1.replace(dic1)
         colorlist2 = clusters2.replace(dic2)
@@ -483,7 +487,7 @@ def trajectory_tree(
 
     plt.figure(figsize=figsize)
     pos = graphviz_layout(tree, prog='dot')
-    nx.draw(
+    nx.draw_networkx(
         tree,
         pos,
         node_color=colorlist,
@@ -493,7 +497,7 @@ def trajectory_tree(
         with_labels=True,
         edge_color="gray",
         arrows=True
-        )
+    )
 
     if save:
         if isinstance(save, str):
@@ -548,7 +552,7 @@ def tree_alignment(
     tree = nx.relabel_nodes(tree, mapping)
     plt.figure(figsize=figsize)
     pos = graphviz_layout(tree, prog='dot')
-    nx.draw(tree, pos, node_color='lightskyblue', font_weight='bold', font_size=font_size,
+    nx.draw_networkx(tree, pos, node_color='lightskyblue', font_weight='bold', font_size=font_size,
             node_size=node_size, with_labels=True, edge_color="gray", arrows=True)
 
     if save:
