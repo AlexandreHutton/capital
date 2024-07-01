@@ -23,6 +23,7 @@ def preprocessing(
     N_pcs: int = 50,
     n_Top_genes: int = 2000,
     K: int = 10,
+    exclude_highly_expressed = False,
     magic_imputation: bool = False,
 ):
     """\
@@ -99,6 +100,7 @@ def preprocessing(
         N_pcs=N_pcs,
         n_Top_genes=n_Top_genes,
         K=K,
+        exclude_highly_expressed=exclude_highly_expressed,
         magic_imputation=magic_imputation,
         copy=False
     )
